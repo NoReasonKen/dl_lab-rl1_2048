@@ -40,12 +40,12 @@ std::ostream& operator<<(std::ostream& os, const Board& b)
     os << "+----------------+\n";
     for (auto i(0); i < 4; i++)
     {
-	os << "+";
+	os << "|";
 	for (auto j(0); j < 4; j++)
 	{
 	    os << std::setw(4) << int(b.board_[i][j]);
 	}
-	os << "+\n";
+	os << "|\n";
     }
     os << "+----------------+\n";
     
@@ -56,8 +56,8 @@ Board Board::mirror()
 {
     Board b(*this);
 
-    for (auto i(b.board_.begin()), ie(b.board_.end()); i != ie; i++)
-	std::reverse(i, ie);
+    for (auto& i: b.board_)
+	std::reverse(i.begin(), i.end());
     
     return b;
 }
@@ -67,40 +67,35 @@ Board Board::transpose()
     Board b;
 
     for (size_t i(0); i < board_.size(); i++)
-    {
 	for (size_t j(0); j < board_[i].size(); j++)
-	{
 	    b.board_[j][i] = board_[i][j];
-	}
-    }
 
     return b;
 }
 
-unsigned Board::left()
+Board Board::left(unsigned& s)
 {
     Board b(*this);
-    unsigned score(0);
 
     for (size_t i(0); i < b.board_.size(); i++)
-	score += combine(b.board_[i]);
+	s += combine(b.board_[i]);
 
-    return score;
+    return b;
 }
 
-unsigned Board::right()
+Board Board::right(unsigned& s)
 {
-    return this->mirror().left();
+    return this->mirror().left(s).mirror();
 }
 
-unsigned Board::up()
+Board Board::up(unsigned& s)
 {
-    return this->transpose().left();
+    return this->transpose().left(s).transpose();
 }
 
-unsigned Board::down()
+Board Board::down(unsigned& s)
 {
-    return this->transpose().mirror().left();
+    return this->transpose().right(s).transpose();
 }
 
 void Board::popup()
