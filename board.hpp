@@ -30,11 +30,11 @@ class Board
     friend std::ostream& operator<<(std::ostream&, const Board&);
     Board mirror();
     Board transpose();
-    unsigned left();
-    unsigned right();
-    unsigned up();
-    unsigned down();
-    void popup();
+    Board left(unsigned&);
+    Board right(unsigned&);
+    Board up(unsigned&);
+    Board down(unsigned&);
+    bool popup();
 };
 
 #endif
