@@ -43,7 +43,11 @@ std::ostream& operator<<(std::ostream& os, const Board& b)
 	os << "|";
 	for (auto j(0); j < 4; j++)
 	{
-	    os << std::setw(4) << int(b.board_[i][j]);
+	    os << std::setw(4);
+	    if (b.board_[i][j] == 0)
+		os << 0;
+	    else
+		os << (1 << b.board_[i][j]);
 	}
 	os << "|\n";
     }
@@ -122,15 +126,31 @@ bool Board::popup()
 		if (count == 0)
 		{
 		    if (uid2(rd) == 9)
-			j = 4;
-		    else
 			j = 2;
+		    else
+			j = 1;
 		    return true;
 		}
 		count--;
 	    }
 
     static_assert(true, "popup func reach an unreachable place");
+    return false;
+}
+
+Row Board::get_tuple(unsigned idx)
+{
+    if (idx < 4)
+	return board_[idx];
+    else
+    {
+	Row r(4, 0);
+	
+	for (size_t i(0); i < 4; i++)
+	    r[i] = board_[i][idx - 4];
+	
+	return r;
+    }
 }
 
 /********************************************************************/
@@ -146,13 +166,13 @@ unsigned combine(Row& r)
 	    });
     for (auto i(r.begin()), ie(r.end() - 1); i != ie; i++)
     {
-	if (*i == *(i + 1))
+	if (*i == *(i + 1) && *i != 0)
 	{
-	    score += *i * 2;
-	    *i *= 2;
+	    score += (1 << *i) * 2;
+	    *i += 1;
 	    for (auto j(i + 1); j != ie; j++)
 		*j = *(j + 1);
-	    *(r.end()) = 0;
+	    *(r.end() - 1) = 0;
 	}
     }
 

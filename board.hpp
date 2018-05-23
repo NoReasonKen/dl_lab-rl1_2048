@@ -6,7 +6,7 @@
 #include <ostream>
 #include <utility>
 
-typedef std::vector<uint8_t> Row;
+typedef std::vector<unsigned> Row;
 typedef std::vector<Row> VecRow;
 
 class Board
@@ -35,6 +35,7 @@ class Board
     Board up(unsigned&);
     Board down(unsigned&);
     bool popup();
+    Row get_tuple(unsigned);
 };
 
 #endif
