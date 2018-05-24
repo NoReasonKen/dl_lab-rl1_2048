@@ -25,9 +25,10 @@ class Board
     /*operator*/
     Board& operator=(const Board&);
     Board& operator=(Board&&);
+    bool operator==(const Board&);
+    friend std::ostream& operator<<(std::ostream&, const Board&);
     /****************************************************************/
     /*methods*/
-    friend std::ostream& operator<<(std::ostream&, const Board&);
     Board mirror();
     Board transpose();
     Board left(unsigned&);
@@ -36,6 +37,7 @@ class Board
     Board down(unsigned&);
     bool popup();
     Row get_tuple(unsigned);
+    unsigned max_token();
 };
 
 #endif

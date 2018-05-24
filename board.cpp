@@ -33,8 +33,10 @@ Board& Board::operator=(Board&& b)
     board_ = std::move(b.board_);
     return *this;
 }
-/********************************************************************/
-/*methods*/
+bool Board::operator==(const Board& b)
+{
+    return this->board_ == b.board_;
+}
 std::ostream& operator<<(std::ostream& os, const Board& b)
 {
     os << "+----------------+\n";
@@ -55,7 +57,8 @@ std::ostream& operator<<(std::ostream& os, const Board& b)
     
     return os;
 }
-
+/********************************************************************/
+/*methods*/
 Board Board::mirror()
 {
     Board b(*this);
@@ -153,6 +156,18 @@ Row Board::get_tuple(unsigned idx)
     }
 }
 
+unsigned Board::max_token()
+{
+    unsigned max(0);
+
+    for (auto& i: board_)
+	for (auto j: i)
+	    if (j > max)
+		max = j;
+
+    return max;
+}
+
 /********************************************************************/
 /*functions*/
 unsigned combine(Row& r)
@@ -164,13 +179,13 @@ unsigned combine(Row& r)
 	    {
 		return !a < !b;
 	    });
-    for (auto i(r.begin()), ie(r.end() - 1); i != ie; i++)
+    for (auto i(r.begin()); i != r.end() - 1; i++)
     {
 	if (*i == *(i + 1) && *i != 0)
 	{
 	    score += (1 << *i) * 2;
 	    *i += 1;
-	    for (auto j(i + 1); j != ie; j++)
+	    for (auto j(i + 1); j != r.end() - 1; j++)
 		*j = *(j + 1);
 	    *(r.end() - 1) = 0;
 	}
